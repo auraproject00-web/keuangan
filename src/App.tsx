@@ -4,7 +4,7 @@ import { Plus } from 'lucide-react';
 
 import { BK, BG, PRIMARY, NAV } from '@/lib/constants';
 import type { Screen, MenuKey, Transaction, WalletData } from '@/lib/types';
-import { supabase } from '@/lib/supabase';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
 import { DesktopSidebar } from '@/components/layout/Sidebar';
 import MobileSidebar from '@/components/layout/Sidebar';
@@ -35,6 +35,11 @@ export default function App() {
 
   // Check auth state
   useEffect(() => {
+    if (!isSupabaseConfigured) {
+      setIsLoading(false);
+      return;
+    }
+    
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
         setScreen('home');
@@ -152,6 +157,19 @@ export default function App() {
 
   if (isLoading) {
     return <div className="w-full h-full flex items-center justify-center bg-gray-50">Loading...</div>;
+  }
+
+  if (!isSupabaseConfigured) {
+    return (
+      <div className="w-full h-full flex items-center justify-center p-6" style={{ background: BG }}>
+        <div className="max-w-md w-full bg-white p-8 rounded-2xl" style={{ border: `3px solid ${BK}`, boxShadow: `8px 8px 0 ${BK}` }}>
+          <h2 className="text-xl font-black mb-4" style={{ color: BK }}>Setup Incomplete</h2>
+          <p className="text-sm font-medium mb-4" style={{ color: '#6B7280' }}>
+            Supabase environment variables are missing. Please add <strong>VITE_SUPABASE_URL</strong> and <strong>VITE_SUPABASE_ANON_KEY</strong> to your Vercel project settings, then redeploy.
+          </p>
+        </div>
+      </div>
+    );
   }
 
   return (
