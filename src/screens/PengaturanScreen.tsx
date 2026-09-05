@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { User, Globe, Bell, ShieldCheck, Info, LogOut, ChevronRight, Trash2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { User, Globe, Bell, ShieldCheck, Info, LogOut, ChevronRight, Trash2, AlertCircle } from 'lucide-react';
 import { BK, BG, PRIMARY } from '@/lib/constants';
 import { clearAllData } from '@/lib/storage';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
@@ -8,6 +8,15 @@ import ConfirmDialog from '@/components/ui/ConfirmDialog';
 export default function PengaturanScreen({ onLogout }: { onLogout: () => void }) {
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [toastMsg, setToastMsg] = useState('');
+
+  // Auto-hide toast after 2.5s
+  useEffect(() => {
+    if (toastMsg) {
+      const t = setTimeout(() => setToastMsg(''), 2500);
+      return () => clearTimeout(t);
+    }
+  }, [toastMsg]);
 
   const groups = [
     {
@@ -58,6 +67,24 @@ export default function PengaturanScreen({ onLogout }: { onLogout: () => void })
         onCancel={() => setShowLogoutConfirm(false)}
       />
 
+      {/* Floating Toast for WIP Features */}
+      <div className="fixed top-6 left-0 right-0 z-50 flex justify-center pointer-events-none px-4">
+        <AnimatePresence>
+          {toastMsg && (
+            <motion.div
+              initial={{ y: -20, opacity: 0, scale: 0.9 }}
+              animate={{ y: 0, opacity: 1, scale: 1 }}
+              exit={{ y: -20, opacity: 0, scale: 0.9 }}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-full shadow-lg"
+              style={{ background: '#1F2937', color: 'white' }}
+            >
+              <AlertCircle className="w-4 h-4 text-orange-400" />
+              <span className="text-[13px] font-bold">{toastMsg}</span>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
       <div className="mx-4 mt-4 rounded-xl p-4 flex items-center gap-3"
         style={{ background: PRIMARY, border: `2px solid ${BK}`, boxShadow: `4px 4px 0 ${BK}` }}>
         <div className="w-12 h-12 rounded-xl flex items-center justify-center font-black text-white text-lg flex-shrink-0"
@@ -78,6 +105,7 @@ export default function PengaturanScreen({ onLogout }: { onLogout: () => void })
             <div className="rounded-xl overflow-hidden" style={{ border: `2px solid ${BK}`, boxShadow: `4px 4px 0 ${BK}`, background: BG }}>
               {items.map(({ Icon, label, sub }, idx) => (
                 <button key={label}
+                  onClick={() => setToastMsg(`Fitur "${label}" akan segera hadir!`)}
                   className="w-full flex items-center gap-3 px-4 py-3.5 text-left transition-colors"
                   style={{ borderTop: idx > 0 ? `2px solid ${BK}` : 'none' }}
                   onMouseOver={e => (e.currentTarget.style.background = '#FFF0E8')}

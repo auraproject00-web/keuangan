@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
-import { Wallet } from 'lucide-react';
+import { ArrowRight, Wallet, Banknote, Coins } from 'lucide-react';
 import { PRIMARY, BK, BG } from '@/lib/constants';
 import TopoBg from '@/components/ui/TopoBg';
 import Wave from '@/components/ui/Wave';
@@ -11,12 +10,32 @@ export default function LandingScreen({ onContinue }: { onContinue: () => void }
       <div className="relative overflow-hidden flex-shrink-0" style={{ height: 'clamp(260px, 46svh, 358px)', background: PRIMARY }}>
         <TopoBg />
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 z-10">
-          <motion.div initial={{ scale: 0.7, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.15, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="w-[68px] h-[68px] rounded-xl flex items-center justify-center"
-            style={{ background: BK, border: '3px solid white', boxShadow: '4px 4px 0 white' }}>
-            <Wallet className="w-8 h-8 text-white" strokeWidth={2} />
-          </motion.div>
+          <div className="relative">
+            <motion.div
+              initial={{ y: -40, opacity: 0, scale: 0.5 }}
+              animate={{ y: [ -40, -10, 0, 10, 20 ], opacity: [0, 1, 1, 0, 0], scale: [0.5, 1, 1, 0.8, 0] }}
+              transition={{ delay: 0.6, duration: 1.5, repeat: Infinity, repeatDelay: 1 }}
+              className="absolute -top-6 -right-2 z-0"
+            >
+              <Banknote className="w-6 h-6 text-green-300" strokeWidth={2.5} />
+            </motion.div>
+            
+            <motion.div
+              initial={{ y: -50, opacity: 0, scale: 0.5 }}
+              animate={{ y: [ -50, -20, -5, 15, 25 ], opacity: [0, 1, 1, 0, 0], scale: [0.5, 1, 1, 0.8, 0] }}
+              transition={{ delay: 1.2, duration: 1.5, repeat: Infinity, repeatDelay: 1.2 }}
+              className="absolute -top-10 -left-1 z-0"
+            >
+              <Coins className="w-5 h-5 text-yellow-300" strokeWidth={2.5} />
+            </motion.div>
+
+            <motion.div initial={{ scale: 0.7, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.15, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              className="w-[68px] h-[68px] rounded-xl flex items-center justify-center relative z-10"
+              style={{ background: BK, border: '3px solid white', boxShadow: '4px 4px 0 white' }}>
+              <Wallet className="w-8 h-8 text-white" strokeWidth={2} />
+            </motion.div>
+          </div>
           <motion.span initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.25, duration: 0.4 }}
             className="text-white font-display font-black text-lg uppercase tracking-widest">
