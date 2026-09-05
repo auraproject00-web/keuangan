@@ -1,6 +1,7 @@
 import { defineConfig, type HtmlTagDescriptor, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
+import { VitePWA } from 'vite-plugin-pwa'
 import path from 'node:path'
 
 import siteConfiguration from './.figma/make/site.json'
@@ -23,6 +24,28 @@ export default defineConfig(({ mode }) => {
       figmaErrorOverlayReplay(),
       figmaReactRefreshBoundaryFallback(),
       figmaMakeKitPlugin({ storiesGlob: '/src/**/*.stories.{ts,tsx,js,jsx}' }),
+      VitePWA({
+        registerType: 'autoUpdate',
+        manifest: {
+          name: 'CatatUang',
+          short_name: 'CatatUang',
+          description: 'Aplikasi pencatatan keuangan pribadi',
+          theme_color: '#FF6B35',
+          background_color: '#FFFBF5',
+          display: 'standalone',
+          icons: [
+            {
+              src: '/icon.svg',
+              sizes: '192x192 512x512',
+              type: 'image/svg+xml',
+              purpose: 'any maskable'
+            }
+          ]
+        },
+        workbox: {
+          globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+        }
+      })
     ],
     resolve: {
       alias: {
