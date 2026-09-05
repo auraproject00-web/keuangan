@@ -26,6 +26,7 @@ export default function App() {
   const [activeMenu, setActiveMenu] = useState<MenuKey>('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [userEmail, setUserEmail] = useState<string>('');
 
   const [wallets, setWallets] = useState<WalletData[]>([]);
   const [txs, setTxs] = useState<Transaction[]>([]);
@@ -43,6 +44,7 @@ export default function App() {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
         setScreen('home');
+        setUserEmail(session.user.email ?? '');
         fetchData();
       } else {
         setScreen('landing');
@@ -55,9 +57,11 @@ export default function App() {
     } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session) {
         setScreen('home');
+        setUserEmail(session.user.email ?? '');
         fetchData();
       } else {
         setScreen('landing');
+        setUserEmail('');
         setWallets([]);
         setTxs([]);
       }
@@ -216,8 +220,8 @@ export default function App() {
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             className="flex h-full w-full relative">
 
-            <DesktopSidebar active={activeMenu} onSelect={setActiveMenu} onLogout={handleLogout} />
-            <MobileSidebar open={sidebarOpen} active={activeMenu} onClose={() => setSidebarOpen(false)} onSelect={setActiveMenu} onLogout={handleLogout} />
+            <DesktopSidebar active={activeMenu} onSelect={setActiveMenu} onLogout={handleLogout} userEmail={userEmail} />
+            <MobileSidebar open={sidebarOpen} active={activeMenu} onClose={() => setSidebarOpen(false)} onSelect={setActiveMenu} onLogout={handleLogout} userEmail={userEmail} />
 
             <div className="flex-1 flex flex-col overflow-hidden relative">
               <AnimatePresence>

@@ -6,9 +6,16 @@ import type { MenuKey } from '@/lib/types';
 
 // ─── Desktop Sidebar (always visible ≥768px) ─────────────────────────────────
 
-export function DesktopSidebar({ active, onSelect, onLogout }: {
-  active: MenuKey; onSelect: (k: MenuKey) => void; onLogout: () => void;
+export function DesktopSidebar({ active, onSelect, onLogout, userEmail }: {
+  active: MenuKey; onSelect: (k: MenuKey) => void; onLogout: () => void; userEmail?: string;
 }) {
+  const getFirstName = (email: string) => {
+    const prefix = email.split('@')[0];
+    const first = prefix.split(/[._0-9]/)[0];
+    return first.charAt(0).toUpperCase() + first.slice(1);
+  };
+  const displayName = userEmail ? getFirstName(userEmail) : 'Pengguna';
+  const displayEmail = userEmail || 'demo@email.com';
   return (
     <div
       className="hidden md:flex flex-col flex-shrink-0 overflow-hidden"
@@ -30,8 +37,8 @@ export function DesktopSidebar({ active, onSelect, onLogout }: {
             <User className="w-4 h-4 text-white" />
           </div>
           <div>
-            <p className="text-white font-black text-[13.5px] leading-tight">Pengguna</p>
-            <p className="text-white/70 text-[11.5px] font-medium">demo@email.com</p>
+            <p className="text-white font-black text-[13.5px] leading-tight capitalize">{displayName}</p>
+            <p className="text-white/70 text-[11.5px] font-medium">{displayEmail}</p>
           </div>
         </div>
       </div>
@@ -73,10 +80,17 @@ export function DesktopSidebar({ active, onSelect, onLogout }: {
 
 // ─── Mobile Sidebar (overlay, <768px) ─────────────────────────────────────────
 
-export default function Sidebar({ open, active, onClose, onSelect, onLogout }: {
+export default function Sidebar({ open, active, onClose, onSelect, onLogout, userEmail }: {
   open: boolean; active: MenuKey;
-  onClose: () => void; onSelect: (k: MenuKey) => void; onLogout?: () => void;
+  onClose: () => void; onSelect: (k: MenuKey) => void; onLogout?: () => void; userEmail?: string;
 }) {
+  const getFirstName = (email: string) => {
+    const prefix = email.split('@')[0];
+    const first = prefix.split(/[._0-9]/)[0];
+    return first.charAt(0).toUpperCase() + first.slice(1);
+  };
+  const displayName = userEmail ? getFirstName(userEmail) : 'Pengguna';
+  const displayEmail = userEmail || 'demo@email.com';
   return (
     <>
       <AnimatePresence>
@@ -114,8 +128,8 @@ export default function Sidebar({ open, active, onClose, onSelect, onLogout }: {
                   <User className="w-4 h-4 text-white" />
                 </div>
                 <div>
-                  <p className="text-white font-black text-[13.5px] leading-tight">Pengguna</p>
-                  <p className="text-white/70 text-[11.5px] font-medium">demo@email.com</p>
+                  <p className="text-white font-black text-[13.5px] leading-tight capitalize">{displayName}</p>
+                  <p className="text-white/70 text-[11.5px] font-medium">{displayEmail}</p>
                 </div>
               </div>
             </div>
